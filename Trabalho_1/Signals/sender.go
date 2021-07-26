@@ -21,8 +21,8 @@ func main() {
 	for scanner.Scan() {
 		inputStr := scanner.Text()
 		inputs := strings.Split(inputStr, ",")
-		pid, _ := strconv.Atoi(inputs[0])
-		signal, _ := strconv.Atoi(inputs[1])
+		pid, _ := strconv.Atoi(strings.Trim(inputs[0], " "))
+		signal, _ := strconv.Atoi(strings.Trim(inputs[1], " "))
 		if processExists(pid) {
 			syscall.Kill(pid, syscall.Signal(signal))
 			fmt.Println("[SENDER] Signal Sended.")
