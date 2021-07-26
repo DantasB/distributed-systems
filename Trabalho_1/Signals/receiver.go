@@ -8,10 +8,28 @@ import (
 )
 
 func busy_wait(signal_chan chan os.Signal, exit_chan chan int) {
+	go func() {
+		for {
+			select {
+			case signal := <-signal_chan:
 
+				if signal == syscall.SIGHUP {
+					fmt.Println("[RECEIVER] SIGHUP received.")
+				}
+				if signal == syscall.SIGTERM {
+					fmt.Println("[RECEIVER] SIGTERM received.")
+				}
+				if signal == syscall.SIGQUIT {
+					fmt.Println("[RECEIVER] SIGQUIT received.")
+					exit_chan <- 0
+				}
+			default:
+			}
+		}
+	}()
 }
 
-func blocking_waiting(signal_chan chan os.Signal, exit_chan chan int) {
+func blocking_wait(signal_chan chan os.Signal, exit_chan chan int) {
 	go func() {
 		for {
 			signal := <-signal_chan
