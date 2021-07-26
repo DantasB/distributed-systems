@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 )
 
@@ -56,7 +57,21 @@ func main() {
 
 	exit_chan := make(chan int)
 
-	busy_wait(signal_chan, exit_chan)
+	if len(os.Args) != 2 {
+		fmt.Println("[RECEIVER] Missing parameter. Please, choose 0 for blocking wait or 1 for busy wait.")
+		return
+	}
+
+	mode, _ := strconv.Atoi(os.Args[1])
+	switch mode {
+	case 0:
+		blocking_wait(signal_chan, exit_chan)
+	case 1:
+		busy_wait(signal_chan, exit_chan)
+	default:
+		fmt.Println("[RECEIVER] Unknown parameter. Please, choose 0 for blocking wait or 1 for busy wait.")
+		return
+	}
 
 	code := <-exit_chan
 
