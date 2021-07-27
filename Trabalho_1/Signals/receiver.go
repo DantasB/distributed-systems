@@ -50,17 +50,18 @@ func blocking_wait(signal_chan chan os.Signal, exit_chan chan int) {
 }
 
 func main() {
-	fmt.Printf("pid: %d\n", os.Getpid())
+	if len(os.Args) != 2 {
+		fmt.Println("[RECEIVER] Missing parameter. Please, choose 0 for blocking wait or 1 for busy wait.")
+		return
+	}
+
+	fmt.Printf("[RECEIVER] Process pid : %d\n", os.Getpid())
+
 	signal_chan := make(chan os.Signal, 1)
 
 	signal.Notify(signal_chan)
 
 	exit_chan := make(chan int)
-
-	if len(os.Args) != 2 {
-		fmt.Println("[RECEIVER] Missing parameter. Please, choose 0 for blocking wait or 1 for busy wait.")
-		return
-	}
 
 	mode, _ := strconv.Atoi(os.Args[1])
 	switch mode {
