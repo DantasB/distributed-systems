@@ -9,21 +9,23 @@ import (
 	"time"
 )
 
-func generateRandomNumbers(n0 int) int {
+func generateRandomNumbers(x int) int {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return n0 + r.Intn(100)
+	return x + r.Intn(100)
 }
 
 func main() {
 	var n int
-	flag.IntVar(&n, "n", 0, "number of random numbers produced")
+	flag.IntVar(&n, "n", 0, "Number of random numbers produced")
 	flag.Parse()
+
 	conexao, err := net.Dial("tcp", "127.0.0.1:8081")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	var x = 0
+
+	var x = 1
 	for i := 0; i < n; i++ {
 		x = generateRandomNumbers(x)
 		str := fmt.Sprintf("%d\n", x)
@@ -34,9 +36,10 @@ func main() {
 			return
 		}
 
-		fmt.Printf("%v Is prime: %s \n", x, message)
+		fmt.Printf("[CLIENT] Is the value %v prime? %s \n", x, message)
 	}
+
 	str := fmt.Sprintf("%d\n", 0)
-	fmt.Println("Ending Execution")
+	fmt.Println("[CLIENT] Process finished.")
 	fmt.Fprintf(conexao, str)
 }

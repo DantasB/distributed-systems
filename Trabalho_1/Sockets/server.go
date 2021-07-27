@@ -7,13 +7,24 @@ import (
 	"os"
 )
 
+func isPrime(number int) bool {
+	for i := 2; i < number; i++ {
+		if number%i == 0 {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
-	fmt.Println("Server awaiting connection...")
+	fmt.Println("[SERVER] Awaiting connection...")
+
 	server, err := net.Listen("tcp", ":8081")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
+
 	conn, err := server.Accept()
 	if err != nil {
 		fmt.Println(err)
@@ -22,31 +33,29 @@ func main() {
 
 	defer server.Close()
 
-	fmt.Println("Connection Accepted...")
+	fmt.Println("[SERVER] Connection Accepted.")
 	for {
 		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Print("Message Received : ", message)
+
+		fmt.Print("[SERVER] Message Received : ", message)
+
 		var val int
 		_, err = fmt.Sscanf(message, "%d\n", &val)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+
 		if val == 0 {
-			fmt.Println("Reciveied 0 \nEnding Execution")
+			fmt.Println("[SERVER] Process finished.")
 			return
 		}
-		is_prime := true
-		for i := 2; i < val; i++ {
-			if val%i == 0 {
-				is_prime = false
-			}
-		}
-		novamensagem := fmt.Sprintf("%v", is_prime)
+
+		novamensagem := fmt.Sprintf("%v", isPrime(val))
 		conn.Write([]byte(novamensagem + "\n"))
 	}
 
