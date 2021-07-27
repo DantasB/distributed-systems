@@ -55,7 +55,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("pid: %d\n", os.Getpid())
+	fmt.Printf("[RECEIVER] Process pid : %d\n", os.Getpid())
 
 	signal_chan := make(chan os.Signal, 1)
 
