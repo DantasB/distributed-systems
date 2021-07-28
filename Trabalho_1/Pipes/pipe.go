@@ -11,9 +11,10 @@ import (
 	"time"
 )
 
+var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 func generateRandomNumbers(x int) int {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return x + r.Intn(100)
+	return x + seed.Intn(100) + 1
 }
 
 func isPrime(number int) string {
@@ -29,6 +30,7 @@ func consumer(r io.Reader) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		n, _ := strconv.Atoi(scanner.Text())
+
 		fmt.Printf("[CONSUMER] Message Received: %v\n", n)
 
 		if n == 0 {
