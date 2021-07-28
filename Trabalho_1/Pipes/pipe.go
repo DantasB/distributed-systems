@@ -7,12 +7,9 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
-	"strings"
 	"syscall"
 	"time"
 )
-
-var r, w *os.File
 
 func generateRandomNumbers(x int) int {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -28,53 +25,58 @@ func isPrime(number int) string {
 	return "true"
 }
 
-func consumer() {
-	buffer := new(strings.Builder)
-	io.Copy(buffer, r)
+func consumer(r io.Reader) {
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		n, _ := strconv.Atoi(scanner.Text())
+		fmt.Printf("[SERVER] Message Received: %v\n", n)
 
-	n, _ := strconv.Atoi(buffer.String())
-	fmt.Print("[SERVER] Message Received : ", n)
+		if n == 0 {
+			fmt.Println("[SERVER] Process finished.")
+			return
+		}
+		message := isPrime(n)
 
-	if n == 0 {
-		fmt.Println("[SERVER] Process finished.")
-		return
+		fmt.Printf("[CLIENT] Is the value %v prime? %s \n", n, message)
 	}
-	message := isPrime(n)
-
-	fmt.Printf("[CLIENT] Is the value %v prime? %s \n", n, message)
 }
 
-func producer() {
+func producer(w io.WriteCloser) {
 	scanner := bufio.NewScanner(os.Stdin)
-
 	fmt.Printf("[SERVER] Write the number of the prime numbers to be generated \n")
 
 	scanner.Scan()
 	n, _ := strconv.Atoi(scanner.Text())
 
-	var x = 1
+	x := 1
 	for i := 0; i < n; i++ {
 		x = generateRandomNumbers(x)
-		fmt.Printf("%d \n", x)
-		fmt.Fprint(w, x)
+		fmt.Fprintf(w, "%v\n", x)
 	}
 
-	fmt.Fprint(w, 0)
-
+	fmt.Fprint(w, "0\n")
 	w.Close()
 }
 
 func main() {
+	fds := make([]int, 2)
+	err := syscall.Pipe(fds)
+	if err != nil {
+		fmt.Println("Pipe error:", err)
+		return
+	}
 
-	r, w, _ = os.Pipe()
+	r := os.NewFile(uintptr(fds[0]), "|0")
+	w := os.NewFile(uintptr(fds[1]), "|1")
 
 	id, _, _ := syscall.Syscall(syscall.SYS_FORK, 0, 0, 0)
 
 	if id == 0 {
-		consumer()
+		producer(w)
 	} else if id > 0 {
-		producer()
+		consumer(r)
 	} else {
 		fmt.Println("[ERROR] Forked Failed.")
+		return
 	}
 }
