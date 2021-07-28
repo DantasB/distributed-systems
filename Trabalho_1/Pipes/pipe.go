@@ -29,21 +29,22 @@ func consumer(r io.Reader) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		n, _ := strconv.Atoi(scanner.Text())
-		fmt.Printf("[SERVER] Message Received: %v\n", n)
+		fmt.Printf("[CONSUMER] Message Received: %v\n", n)
 
 		if n == 0 {
-			fmt.Println("[SERVER] Process finished.")
+			fmt.Println("[CONSUMER] Process finished.")
 			return
 		}
+
 		message := isPrime(n)
 
-		fmt.Printf("[CLIENT] Is the value %v prime? %s \n", n, message)
+		fmt.Printf("[CONSUMER] Is the value %v prime? %s \n", n, message)
 	}
 }
 
 func producer(w io.WriteCloser) {
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf("[SERVER] Write the number of the prime numbers to be generated \n")
+	fmt.Printf("[PRODUCER] Write the number of the prime numbers to be generated \n")
 
 	scanner.Scan()
 	n, _ := strconv.Atoi(scanner.Text())
@@ -59,15 +60,11 @@ func producer(w io.WriteCloser) {
 }
 
 func main() {
-	fds := make([]int, 2)
-	err := syscall.Pipe(fds)
-	if err != nil {
-		fmt.Println("Pipe error:", err)
-		return
-	}
+	pipe := make([]int, 2)
+	syscall.Pipe(pipe)
 
-	r := os.NewFile(uintptr(fds[0]), "|0")
-	w := os.NewFile(uintptr(fds[1]), "|1")
+	r := os.NewFile(uintptr(pipe[0]), "consumer")
+	w := os.NewFile(uintptr(pipe[1]), "producer")
 
 	id, _, _ := syscall.Syscall(syscall.SYS_FORK, 0, 0, 0)
 
