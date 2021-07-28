@@ -9,9 +9,10 @@ import (
 	"time"
 )
 
+var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 func generateRandomNumbers(x int) int {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	return x + r.Intn(100)
+	return x + seed.Intn(100) + 1
 }
 
 func main() {
