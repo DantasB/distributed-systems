@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"math"
 	"math/rand"
 	"os"
 	"strconv"
@@ -17,8 +18,12 @@ func generateRandomNumbers(x int) int {
 	return x + seed.Intn(100) + 1
 }
 
+func getSquareRoot(number int) int {
+	return int(math.Ceil(math.Sqrt(float64(number))))
+}
+
 func isPrime(number int) string {
-	for i := 2; i < number; i++ {
+	for i := 2; i < getSquareRoot(number); i++ {
 		if number%i == 0 {
 			return "false"
 		}
