@@ -3,17 +3,22 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"net"
 	"os"
 )
 
-func isPrime(number int) bool {
-	for i := 2; i < number; i++ {
+func getSquareRoot(number int) int {
+	return int(math.Ceil(math.Sqrt(float64(number))))
+}
+
+func isPrime(number int) string {
+	for i := 2; i < getSquareRoot(number); i++ {
 		if number%i == 0 {
-			return false
+			return "false"
 		}
 	}
-	return true
+	return "true"
 }
 
 func main() {
