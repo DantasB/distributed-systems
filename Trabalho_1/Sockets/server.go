@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"net"
-	"os"
 )
 
 // GetSquareRoot receives an integer number and returns this square root.
@@ -33,21 +32,26 @@ func isPrime(number int) string {
 func main() {
 	fmt.Println("[SERVER] Awaiting connection...")
 
+	//Open TCP server on port 8081
 	server, err := net.Listen("tcp", ":8081")
+	//Checks if error is not null and end execution if it is
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(-1)
+		return
 	}
 
+	//Accepts a new connection
 	conn, err := server.Accept()
+	//Checks if error is not null and end execution if it is
 	if err != nil {
 		fmt.Println(err)
-		panic(err)
+		return
 	}
 
 	defer server.Close()
 
 	fmt.Println("[SERVER] Connection Accepted.")
+	//Infinite loop receiving numbers on the connection and ending if the number is equal to 0
 	for {
 		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
