@@ -1,4 +1,4 @@
-package main
+package signals
 
 import (
 	"bufio"
@@ -30,7 +30,7 @@ func inputParsing(input string) (int, int) {
 	return pid, signal
 }
 
-func main() {
+func SignalSender() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 

@@ -1,4 +1,4 @@
-package main
+package signals
 
 import (
 	"fmt"
@@ -80,7 +80,7 @@ func instantiateChannels() (chan os.Signal, chan int) {
 	return signalChannel, exitChannel
 }
 
-func main() {
+func SignalReceiver() {
 	if len(os.Args) != 2 {
 		fmt.Println("[RECEIVER] Missing parameter. Please, choose 0 for blocking wait or 1 for busy wait.")
 		return
