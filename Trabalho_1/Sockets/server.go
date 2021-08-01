@@ -1,53 +1,36 @@
-package main
+package sockets
 
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"net"
-	"os"
+
+	utils "github.com/DantasB/Distributed-Systems/Utils"
 )
 
-// GetSquareRoot receives an integer number and returns this square root.
-// It's necessary to cast the integer to float64 because of the sqrt function.
-// Ceil the obtained square root because the output is float64.
-// Convert again to integer because of the output of this function.
-// It returns the square root of a number.
-func getSquareRoot(number int) int {
-	return int(math.Ceil(math.Sqrt(float64(number))))
-}
-
-// IsPrime receives an integer number and returns a string.
-// It will iterate over 2 to the square root of the number - 1.
-// Check if the number is divisible by the i.
-// It returns the string false or true.
-func isPrime(number int) string {
-	for i := 2; i < getSquareRoot(number); i++ {
-		if number%i == 0 {
-			return "false"
-		}
-	}
-	return "true"
-}
-
-func main() {
+func SocketServer() {
 	fmt.Println("[SERVER] Awaiting connection...")
 
+	//Open TCP server on port 8081
 	server, err := net.Listen("tcp", ":8081")
+	//Checks if error is not null and end execution if it is
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(-1)
+		return
 	}
 
+	//Accepts a new connection
 	conn, err := server.Accept()
+	//Checks if error is not null and end execution if it is
 	if err != nil {
 		fmt.Println(err)
-		panic(err)
+		return
 	}
 
 	defer server.Close()
 
-	fmt.Println("[SERVER] Connection Accepted.")
+	fmt.Println("[SERVER] Connection Accepted. Waiting for a message.")
+	//Infinite loop receiving numbers on the connection and ending if the number is equal to 0
 	for {
 		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
@@ -69,7 +52,7 @@ func main() {
 			return
 		}
 
-		novamensagem := fmt.Sprintf("%v", isPrime(val))
+		novamensagem := fmt.Sprintf("%v", utils.IsPrime(val))
 		conn.Write([]byte(novamensagem + "\n"))
 	}
 

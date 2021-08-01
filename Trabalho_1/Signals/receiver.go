@@ -1,6 +1,7 @@
-package main
+package signals
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/signal"
@@ -17,6 +18,7 @@ import (
 // The exitChan receives a 0 message exiting of the goroutine.
 // It has no return.
 func busyWait(signalChan chan os.Signal, exitChan chan int) {
+	fmt.Println("[RECEIVER] Running on Busy Wait mode. Please send a signal.")
 	go func() {
 		for {
 			select {
@@ -47,6 +49,7 @@ func busyWait(signalChan chan os.Signal, exitChan chan int) {
 // The exitChan receives a 0 message exiting of the goroutine.
 // It has no return.
 func blockingWait(signalChan chan os.Signal, exitChan chan int) {
+	fmt.Println("[RECEIVER] Running on Blocking Wait mode. Please send a signal.")
 	go func() {
 		for {
 			signal := <-signalChan
@@ -80,17 +83,18 @@ func instantiateChannels() (chan os.Signal, chan int) {
 	return signalChannel, exitChannel
 }
 
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Println("[RECEIVER] Missing parameter. Please, choose 0 for blocking wait or 1 for busy wait.")
-		return
-	}
-
-	fmt.Printf("[RECEIVER] Process pid : %d\n", os.Getpid())
+func SignalReceiver() {
+	fmt.Printf("\n\n\n[RECEIVER] Process pid : %d\n", os.Getpid())
 
 	signalChan, exitChan := instantiateChannels()
 
-	mode, _ := strconv.Atoi(os.Args[1])
+	fmt.Printf("[RECEIVER] Write the mode you want to run the signal receiver. 0 to blocking wait or 1 to busy wait. \n")
+
+	//Collect the input passed by the user
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+
+	mode, _ := strconv.Atoi(scanner.Text())
 	switch mode {
 	case 0:
 		blockingWait(signalChan, exitChan)

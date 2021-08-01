@@ -1,4 +1,4 @@
-package main
+package signals
 
 import (
 	"bufio"
@@ -30,10 +30,10 @@ func inputParsing(input string) (int, int) {
 	return pid, signal
 }
 
-func main() {
+func SignalSender() {
 	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Printf("[SENDER] Write the pid of the process and the signal that you want to send. Ex: 3100, 2 \n")
 	for scanner.Scan() {
-
 		pid, signal := inputParsing(scanner.Text())
 		if processExists(pid) {
 			syscall.Kill(pid, syscall.Signal(signal))
