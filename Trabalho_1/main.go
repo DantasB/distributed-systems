@@ -10,14 +10,13 @@ import (
 )
 
 func main() {
-	var n int
 	var programName string
+	//Collect the flags passed by the user
 	flag.StringVar(&programName, "program_name", "", "Name of the program to be executed")
-	flag.IntVar(&n, "n", 0, "Number of random numbers produced")
 	flag.Parse()
 	switch programName {
 	case "socket_client":
-		sockets.SocketClient(n)
+		sockets.SocketClient()
 	case "socket_server":
 		sockets.SocketServer()
 	case "signal_rec":

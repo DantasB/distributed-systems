@@ -48,7 +48,7 @@ func consumer(r io.Reader) {
 // It has no return.
 func producer(w io.WriteCloser) {
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf("[PRODUCER] Write the number of the prime numbers to be generated \n")
+	fmt.Printf("[PRODUCER] Write the amount of numbers to be generated \n")
 
 	scanner.Scan()
 	n, _ := strconv.Atoi(scanner.Text())

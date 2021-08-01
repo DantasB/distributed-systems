@@ -4,16 +4,23 @@ import (
 	"bufio"
 	"fmt"
 	"net"
+	"os"
+	"strconv"
 
 	utils "github.com/DantasB/Distributed-Systems/Utils"
 )
 
-func SocketClient(n int) {
+func SocketClient() {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Printf("[Client] Write the amount of numbers to be generated \n")
+	scanner.Scan()
+	n, _ := strconv.Atoi(scanner.Text())
+
 	//Connets to tcp server
 	conexao, err := net.Dial("tcp", "127.0.0.1:8081")
 	//Checks Error and end execution if it not null
 	if err != nil {
-		fmt.Println(err)
+		fmt.Print(err)
 		return
 	}
 
@@ -25,11 +32,11 @@ func SocketClient(n int) {
 		fmt.Fprintf(conexao, str)
 		message, err := bufio.NewReader(conexao).ReadString('\n')
 		if err != nil {
-			fmt.Println(err)
+			fmt.Print(err)
 			return
 		}
 
-		fmt.Printf("[CLIENT] Is the value %v prime? %s \n", x, message)
+		fmt.Printf("[CLIENT] Is the value %v prime? %s", x, message)
 	}
 
 	//Send 0 to the tcp server to end execution and ends
