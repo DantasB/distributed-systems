@@ -27,7 +27,6 @@ func main() {
 	case "pipe":
 		pipe.Pipe()
 	default:
-		fmt.Print(programName, "\n")
 		fmt.Println("Incorrect program name")
 	}
 	return
