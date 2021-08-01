@@ -12,11 +12,11 @@ import (
 
 func main() {
 	fmt.Printf("[MAIN] Write the program name that you want to run: \n")
-	fmt.Printf("[MAIN] socket_client to run the Socket Client program.\n")
-	fmt.Printf("[MAIN] socket_server to run the Socket Server program .\n")
-	fmt.Printf("[MAIN] signal_rec to run the Signal Receiver program.\n")
-	fmt.Printf("[MAIN] signal_sen to run the Signal Sender program.\n")
-	fmt.Printf("[MAIN] pipe to run the Pipe program.\n")
+	fmt.Printf("       socket_client to run the Socket Client program.\n")
+	fmt.Printf("       socket_server to run the Socket Server program.\n")
+	fmt.Printf("       signal_rec to run the Signal Receiver program.\n")
+	fmt.Printf("       signal_sen to run the Signal Sender program.\n")
+	fmt.Printf("       pipe to run the Pipe program.\n\n\n")
 
 	//Collect the input passed by the user
 	scanner := bufio.NewScanner(os.Stdin)
