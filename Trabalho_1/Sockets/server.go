@@ -29,7 +29,7 @@ func SocketServer() {
 
 	defer server.Close()
 
-	fmt.Println("[SERVER] Connection Accepted.")
+	fmt.Println("[SERVER] Connection Accepted. Waiting for a message.")
 	//Infinite loop receiving numbers on the connection and ending if the number is equal to 0
 	for {
 		message, err := bufio.NewReader(conn).ReadString('\n')

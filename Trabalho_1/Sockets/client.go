@@ -11,11 +11,6 @@ import (
 )
 
 func SocketClient() {
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf("[Client] Write the amount of numbers to be generated \n")
-	scanner.Scan()
-	n, _ := strconv.Atoi(scanner.Text())
-
 	//Connets to tcp server
 	conexao, err := net.Dial("tcp", "127.0.0.1:8081")
 	//Checks Error and end execution if it not null
@@ -23,6 +18,12 @@ func SocketClient() {
 		fmt.Print(err)
 		return
 	}
+
+	//Gets the user input
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Printf("\n\n\n[Client] Write the amount of numbers to be generated \n")
+	scanner.Scan()
+	n, _ := strconv.Atoi(scanner.Text())
 
 	var x = 1
 	//Gets n random numbers and sends do TCP server where n is the flag passed by the user
