@@ -55,15 +55,10 @@ func main() {
 		start := time.Now()
 		i := 0
 		for ; i < (n-n%k)-(n/k); i += (n / k) {
-			//fmt.Print(i, "=====", (i + n/k), "\n")
-			//fmt.Print(i, " ,")
 			go sumThread(vector[i:(i + n/k)])
-			//fmt.Print(i, "===", i+n/k, "\n")
 		}
-		//fmt.Print(counter, "========", i, "=====", n+1, "\n")
 		go sumThread(vector[i:])
 		for thEnded != k {
-			//fmt.Print(thEnded, "t=== k", k, "\n")
 		}
 		thEnded = 0
 		duration := time.Since(start)
@@ -71,6 +66,4 @@ func main() {
 	}
 	fmt.Printf("Average Time Elapsed: %v seconds. For N:%v and k:%v \n", avgTime/10, n, k)
 	fmt.Print("=====================\n")
-	//fmt.Print(vector, "\n")
-	//fmt.Print(10/3, "\n")
 }
