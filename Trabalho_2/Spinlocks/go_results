@@ -1,0 +1,57 @@
+++++++++++++++++++++++++++++++++++++++
+Average Time Elapsed: 0.0084007864 seconds. For N:10000000 and k:1 
+=====================
+Average Time Elapsed: 0.0080234608 seconds. For N:10000000 and k:2 
+=====================
+Average Time Elapsed: 0.0049328347 seconds. For N:10000000 and k:4 
+=====================
+Average Time Elapsed: 0.0027255485999999997 seconds. For N:10000000 and k:8 
+=====================
+Average Time Elapsed: 0.0025310903000000003 seconds. For N:10000000 and k:16 
+=====================
+Average Time Elapsed: 0.0025703532000000005 seconds. For N:10000000 and k:32 
+=====================
+Average Time Elapsed: 0.0020696039 seconds. For N:10000000 and k:64 
+=====================
+Average Time Elapsed: 0.002115981 seconds. For N:10000000 and k:128 
+=====================
+Average Time Elapsed: 0.0022522578999999996 seconds. For N:10000000 and k:256 
+=====================
+++++++++++++++++++++++++++++++++++++++
+Average Time Elapsed: 0.0635646594 seconds. For N:100000000 and k:1 
+=====================
+Average Time Elapsed: 0.034484063599999996 seconds. For N:100000000 and k:2 
+=====================
+Average Time Elapsed: 0.026308524399999998 seconds. For N:100000000 and k:4 
+=====================
+Average Time Elapsed: 0.0177157647 seconds. For N:100000000 and k:8 
+=====================
+Average Time Elapsed: 0.0163736364 seconds. For N:100000000 and k:16 
+=====================
+Average Time Elapsed: 0.0180985498 seconds. For N:100000000 and k:32 
+=====================
+Average Time Elapsed: 0.015664244799999998 seconds. For N:100000000 and k:64 
+=====================
+Average Time Elapsed: 0.014740313600000002 seconds. For N:100000000 and k:128 
+=====================
+Average Time Elapsed: 0.014539208100000001 seconds. For N:100000000 and k:256 
+=====================
+++++++++++++++++++++++++++++++++++++++
+Average Time Elapsed: 0.4972170517 seconds. For N:1000000000 and k:1 
+=====================
+Average Time Elapsed: 0.292623384 seconds. For N:1000000000 and k:2 
+=====================
+Average Time Elapsed: 0.21240275360000002 seconds. For N:1000000000 and k:4 
+=====================
+Average Time Elapsed: 0.13708292029999997 seconds. For N:1000000000 and k:8 
+=====================
+Average Time Elapsed: 0.14799872169999997 seconds. For N:1000000000 and k:16 
+=====================
+Average Time Elapsed: 0.1397420339 seconds. For N:1000000000 and k:32 
+=====================
+Average Time Elapsed: 0.13678506399999998 seconds. For N:1000000000 and k:64 
+=====================
+Average Time Elapsed: 0.13648176560000003 seconds. For N:1000000000 and k:128 
+=====================
+Average Time Elapsed: 0.1297974106 seconds. For N:1000000000 and k:256 
+=====================
