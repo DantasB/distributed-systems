@@ -11,10 +11,6 @@ import (
 	semaphore "golang.org/x/sync/semaphore"
 )
 
-//consumer thread end
-var consumerThreadLimit = 0
-var producerThreadLimit = 0
-
 //consumer limit
 var m = 100000
 
@@ -103,7 +99,7 @@ func getFirstFullPosition() int {
 // consumes receives an index of a global array and fills it with 0.
 func consumes() {
 	var value = getFirstFullPosition()
-	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(value))
+	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(memory[value]))
 	memory[value] = 0
 	m--
 }
@@ -122,6 +118,7 @@ func producer() {
 		mutex.Release(1)
 		full.Release(1)
 	}
+
 }
 
 func consumer(finished chan bool) {
@@ -133,6 +130,7 @@ func consumer(finished chan bool) {
 		mutex.Release(1)
 		empty.Release(1)
 	}
+
 	finished <- true
 }
 
@@ -151,6 +149,7 @@ func main() {
 	flag.IntVar(&np, "np", 0, "Number of Producer Threads")
 	flag.IntVar(&n, "n", 0, "Shared Memory Size")
 	flag.Parse()
+
 	if n < 1 || nc < 1 || np < 1 {
 		fmt.Print("Incorrect flags values passed \n")
 		return
@@ -162,10 +161,17 @@ func main() {
 	setFullToZero(n)
 	empty = semaphore.NewWeighted(int64(n))
 
-	go consumer(finished)
+	start := time.Now()
+	for i := 0; i < nc; i++ {
+		go consumer(finished)
+	}
 
-	go producer()
+	for i := 0; i < nc; i++ {
+		go producer()
+	}
 
 	<-finished
-
+	duration := time.Since(start)
+	fmt.Printf("Average Time Elapsed: %v seconds. For Np:%v, Nc:%v and N:%v \n", duration.Seconds(), np, nc, n)
+	fmt.Print("=====================\n")
 }
