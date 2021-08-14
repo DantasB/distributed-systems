@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"sync"
 	"time"
 
 	semaphore "golang.org/x/sync/semaphore"
@@ -23,7 +24,7 @@ var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
 //semaphores
 var empty *semaphore.Weighted
 var full *semaphore.Weighted
-var mutex = semaphore.NewWeighted(1)
+var mutex sync.Mutex
 
 // generateRandomNumber receives nothing and returns a integer.
 // It will use a seed that generates a number from 1 to 10^7.
@@ -32,18 +33,11 @@ func generateRandomNumber() int {
 	return seed.Intn(int(math.Pow(10, 7))) + 1
 }
 
-// createArrayWithZeros receives nothing and returns a vector.
-// It will instantiate a vector with size m.
-// It will iterate over the array and set the value of 0 to 2 positions.
+// createArrayWithZeros receives n and returns a vector of zeroes.
+// It will instantiate a vector with size n.
 // It returns the array containing only zeros.
 func createArrayWithZeros(n int) []int {
-	memory := make([]int, n)
-	memory[0] = 0
-	for i := 1; i < len(memory); i *= 2 {
-		copy(memory[i:], memory[:i])
-	}
-
-	return memory
+	return make([]int, n)
 }
 
 // GetSquareRoot receives an integer number and returns this square root.
@@ -101,7 +95,7 @@ func consumes() {
 	var value = getFirstFullPosition()
 	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(memory[value]))
 	memory[value] = 0
-	m--
+	m-- //Race condition
 }
 
 // produces receives an index of a global array and fills it with a random number.
@@ -113,9 +107,9 @@ func producer() {
 	ctx := context.Background()
 	for {
 		empty.Acquire(ctx, 1)
-		mutex.Acquire(ctx, 1)
+		mutex.Lock()
 		produces()
-		mutex.Release(1)
+		mutex.Unlock()
 		full.Release(1)
 	}
 
@@ -123,11 +117,11 @@ func producer() {
 
 func consumer(finished chan bool) {
 	ctx := context.Background()
-	for m != 0 {
+	for m != 0 { //Race condition
 		full.Acquire(ctx, 1)
-		mutex.Acquire(ctx, 1)
-		consumes()
-		mutex.Release(1)
+		mutex.Lock()
+		consumes() //Race condition
+		mutex.Unlock()
 		empty.Release(1)
 	}
 
@@ -163,7 +157,7 @@ func main() {
 
 	start := time.Now()
 	for i := 0; i < nc; i++ {
-		go consumer(finished)
+		go consumer(finished) //race condition
 	}
 
 	for i := 0; i < nc; i++ {
