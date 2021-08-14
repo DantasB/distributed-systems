@@ -8,16 +8,23 @@ import (
 	"math/rand"
 	"time"
 
-	"golang.org/x/sync/semaphore"
+	semaphore "golang.org/x/sync/semaphore"
 )
+
+//consumer thread end
+var consumerThreadLimit = 0
+var producerThreadLimit = 0
 
 //consumer limit
 var m = 100000
+
+//memory instantiation
 var memory []int
 
 //seed of random number
 var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
 
+//semaphores
 var empty *semaphore.Weighted
 var full *semaphore.Weighted
 var mutex = semaphore.NewWeighted(1)
@@ -109,24 +116,31 @@ func produces() {
 func producer() {
 	ctx := context.Background()
 	for {
-		defer empty.Acquire(ctx, 1)
-		defer mutex.Acquire(ctx, 1)
+		empty.Acquire(ctx, 1)
+		mutex.Acquire(ctx, 1)
 		produces()
-		defer mutex.Release(1)
-		defer full.Release(1)
+		mutex.Release(1)
+		full.Release(1)
 	}
 }
 
 func consumer(finished chan bool) {
 	ctx := context.Background()
 	for m != 0 {
-		defer full.Acquire(ctx, 1)
-		defer mutex.Acquire(ctx, 1)
+		full.Acquire(ctx, 1)
+		mutex.Acquire(ctx, 1)
 		consumes()
-		defer mutex.Release(1)
-		defer empty.Release(1)
+		mutex.Release(1)
+		empty.Release(1)
 	}
 	finished <- true
+}
+
+func setFullToZero(n int) {
+	ctx := context.Background()
+	for i := 0; i < n; i++ {
+		full.Acquire(ctx, 1)
+	}
 }
 
 func main() {
@@ -134,7 +148,7 @@ func main() {
 	var nc int
 	var n int
 	flag.IntVar(&nc, "nc", 0, "Number of Consumer Threads")
-	flag.IntVar(&np, "kp", 0, "Number of Producer Threads")
+	flag.IntVar(&np, "np", 0, "Number of Producer Threads")
 	flag.IntVar(&n, "n", 0, "Shared Memory Size")
 	flag.Parse()
 	if n < 1 || nc < 1 || np < 1 {
@@ -143,9 +157,9 @@ func main() {
 	}
 
 	finished := make(chan bool)
-
 	memory = createArrayWithZeros(n)
 	full = semaphore.NewWeighted(int64(n))
+	setFullToZero(n)
 	empty = semaphore.NewWeighted(int64(n))
 
 	go consumer(finished)
