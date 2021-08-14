@@ -1,6 +1,7 @@
 #!/bin/bash
 declare -a np_ns=(
     "1 1"
+    "1 2"
     "1 4"
     "1 8"
     "1 16"

@@ -139,8 +139,8 @@ func main() {
 	var np int
 	var nc int
 	var n int
-	flag.IntVar(&nc, "nc", 0, "Number of Consumer Threads")
 	flag.IntVar(&np, "np", 0, "Number of Producer Threads")
+	flag.IntVar(&nc, "nc", 0, "Number of Consumer Threads")
 	flag.IntVar(&n, "n", 0, "Shared Memory Size")
 	flag.Parse()
 
