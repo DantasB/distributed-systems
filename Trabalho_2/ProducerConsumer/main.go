@@ -1,18 +1,26 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"math"
 	"math/rand"
 	"time"
+
+	"golang.org/x/sync/semaphore"
 )
 
 //consumer limit
 var m = 100000
+var memory []int
 
 //seed of random number
 var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+var empty *semaphore.Weighted
+var full *semaphore.Weighted
+var mutex = semaphore.NewWeighted(1)
 
 // generateRandomNumber receives nothing and returns a integer.
 // It will use a seed that generates a number from 1 to 10^7.
@@ -25,8 +33,8 @@ func generateRandomNumber() int {
 // It will instantiate a vector with size m.
 // It will iterate over the array and set the value of 0 to 2 positions.
 // It returns the array containing only zeros.
-func createArrayWithZeros() []int {
-	memory := make([]int, m)
+func createArrayWithZeros(n int) []int {
+	memory := make([]int, n)
 	memory[0] = 0
 	for i := 1; i < len(memory); i *= 2 {
 		copy(memory[i:], memory[:i])
@@ -57,12 +65,12 @@ func isPrime(number int) string {
 	return "true"
 }
 
-// getFreePosition receives an array of integers and returns a integer.
+// getFreePosition receives nothing and returns a integer.
 // It will iterate over the array.
 // Check if the value of the index is 0.
 // It returns -1 if there's no empty space.
 // or returns the index if the array in that index is equal 0.
-func getFreePosition(memory []int) int {
+func getFreePosition() int {
 	for i := 0; i < len(memory); i++ {
 		if memory[i] == 0 {
 			return i
@@ -71,12 +79,12 @@ func getFreePosition(memory []int) int {
 	return -1
 }
 
-// getFirstFullPosition receives an array of integers and returns a integer.
+// getFirstFullPosition receives nothing and returns a integer.
 // It will iterate over the array.
 // Check if the value of the index is different from 0.
 // It returns the index if the array in that index is different from 0.
 // or returns -1 if all values of the array is equal 0.
-func getFirstFullPosition(memory []int) int {
+func getFirstFullPosition() int {
 	for i := 0; i < len(memory); i++ {
 		if memory[i] != 0 {
 			return i
@@ -85,34 +93,40 @@ func getFirstFullPosition(memory []int) int {
 	return -1
 }
 
-// isEmpty receives an array of integers and returns a boolean.
-// It will check if there's any array index with value different from 0.
-// It returns false if yes and true if the array is full of zeros.
-func isEmpty(memory []int) bool {
-	if getFirstFullPosition(memory) == -1 {
-		return true
+// consumes receives an index of a global array and fills it with 0.
+func consumes() {
+	var value = getFirstFullPosition()
+	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(value))
+	memory[value] = 0
+	m--
+}
+
+// produces receives an index of a global array and fills it with a random number.
+func produces() {
+	memory[getFreePosition()] = generateRandomNumber()
+}
+
+func producer() {
+	ctx := context.Background()
+	for {
+		defer empty.Acquire(ctx, 1)
+		defer mutex.Acquire(ctx, 1)
+		produces()
+		defer mutex.Release(1)
+		defer full.Release(1)
 	}
-
-	return false
 }
 
-// isFull receives an array of integers and returns a boolean.
-// It will check if there's any array index with value equals 0.
-// It returns false if yes and true if the array contains all values different from 0.
-func isFull(memory []int) bool {
-	if getFreePosition(memory) == -1 {
-		return true
+func consumer(finished chan bool) {
+	ctx := context.Background()
+	for m != 0 {
+		defer full.Acquire(ctx, 1)
+		defer mutex.Acquire(ctx, 1)
+		consumes()
+		defer mutex.Release(1)
+		defer empty.Release(1)
 	}
-
-	return false
-}
-
-func producer(vec []int) {
-
-}
-
-func consumer(vec []int) {
-
+	finished <- true
 }
 
 func main() {
@@ -127,5 +141,17 @@ func main() {
 		fmt.Print("Incorrect flags values passed \n")
 		return
 	}
+
+	finished := make(chan bool)
+
+	memory = createArrayWithZeros(n)
+	full = semaphore.NewWeighted(int64(n))
+	empty = semaphore.NewWeighted(int64(n))
+
+	go consumer(finished)
+
+	go producer()
+
+	<-finished
 
 }
