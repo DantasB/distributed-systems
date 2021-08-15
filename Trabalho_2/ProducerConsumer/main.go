@@ -169,7 +169,6 @@ func main() {
 	full = semaphore.NewWeighted(int64(n))
 	setFullToZero(n)
 	empty = semaphore.NewWeighted(int64(n))
-
 	mutex = semaphore.NewWeighted(1)
 	loopControl = semaphore.NewWeighted(1)
 
