@@ -90,7 +90,9 @@ func getFirstFullPosition() int {
 	return -1
 }
 
-// consumes receives an index of a global array and fills it with 0.
+// consumes receives an index of a global array.
+// checks if this index contains a prime value.
+// fills this index position with 0
 func consumes() {
 	var value = getFirstFullPosition()
 	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(memory[value]))
@@ -102,6 +104,7 @@ func produces() {
 	memory[getFreePosition()] = generateRandomNumber()
 }
 
+// producer will create a context and loop forever producing.
 func producer() {
 	ctx := context.Background()
 	for {
@@ -114,6 +117,11 @@ func producer() {
 
 }
 
+// consumer will receive a finished channel as parameter and return none.
+// it will create a context
+// the first steps are to acquire the loopControl mutex and decrease the m value (limit)
+// after that it will release
+// at the end of the loop, it will send true to the channel (finished consuming)
 func consumer(finished chan bool) {
 	ctx := context.Background()
 	for {
@@ -134,6 +142,7 @@ func consumer(finished chan bool) {
 	finished <- true
 }
 
+//setFullToZero acquires all semaphores resources to start full as zero.
 func setFullToZero(n int) {
 	ctx := context.Background()
 	for i := 0; i < n; i++ {
