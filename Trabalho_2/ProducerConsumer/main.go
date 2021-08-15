@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"sync"
 	"time"
 
 	semaphore "golang.org/x/sync/semaphore"
@@ -24,7 +23,8 @@ var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
 //semaphores
 var empty *semaphore.Weighted
 var full *semaphore.Weighted
-var mutex sync.Mutex
+var mutex *semaphore.Weighted
+var loopControl *semaphore.Weighted
 
 // generateRandomNumber receives nothing and returns a integer.
 // It will use a seed that generates a number from 1 to 10^7.
@@ -95,7 +95,6 @@ func consumes() {
 	var value = getFirstFullPosition()
 	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(memory[value]))
 	memory[value] = 0
-	m-- //Race condition
 }
 
 // produces receives an index of a global array and fills it with a random number.
@@ -107,9 +106,9 @@ func producer() {
 	ctx := context.Background()
 	for {
 		empty.Acquire(ctx, 1)
-		mutex.Lock()
+		mutex.Acquire(ctx, 1)
 		produces()
-		mutex.Unlock()
+		mutex.Release(1)
 		full.Release(1)
 	}
 
@@ -117,14 +116,21 @@ func producer() {
 
 func consumer(finished chan bool) {
 	ctx := context.Background()
-	for m != 0 { //Race condition
+	for {
+		loopControl.Acquire(ctx, 1)
+		if m == 0 {
+			loopControl.Release(1)
+			break
+		}
+		m--
+		loopControl.Release(1)
+
 		full.Acquire(ctx, 1)
-		mutex.Lock()
-		consumes() //Race condition
-		mutex.Unlock()
+		mutex.Acquire(ctx, 1)
+		consumes()
+		mutex.Release(1)
 		empty.Release(1)
 	}
-
 	finished <- true
 }
 
@@ -149,22 +155,29 @@ func main() {
 		return
 	}
 
-	finished := make(chan bool)
+	finished := make(chan bool, nc)
 	memory = createArrayWithZeros(n)
 	full = semaphore.NewWeighted(int64(n))
 	setFullToZero(n)
 	empty = semaphore.NewWeighted(int64(n))
 
+	mutex = semaphore.NewWeighted(1)
+	loopControl = semaphore.NewWeighted(1)
+
 	start := time.Now()
 	for i := 0; i < nc; i++ {
-		go consumer(finished) //race condition
+		go consumer(finished)
 	}
 
 	for i := 0; i < nc; i++ {
 		go producer()
 	}
+	var consumersEnded int
+	for consumersEnded != nc {
+		<-finished
+		consumersEnded++
+	}
 
-	<-finished
 	duration := time.Since(start)
 	fmt.Printf("Average Time Elapsed: %v seconds. For Np:%v, Nc:%v and N:%v \n", duration.Seconds(), np, nc, n)
 	fmt.Print("=====================\n")
