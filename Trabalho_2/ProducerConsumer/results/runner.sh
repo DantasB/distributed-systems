@@ -19,7 +19,7 @@ NP_NC_LEN=${#NP_NC[@]}
 mkdir -p runs
 LAST_ARCHIVE_DIR=runs
 
-echo "time(s),n,np,nc" > go_results.csv
+echo "time,n,np,nc" > go_results.csv
 for (( n=0; n<$N_LEN; n++)); 
 do
     for element in "${np_ns[@]}"; 
@@ -34,3 +34,5 @@ do
         done
     done
 done
+
+python ./python/graph.py 
