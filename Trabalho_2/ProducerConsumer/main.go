@@ -172,6 +172,7 @@ func main() {
 	for i := 0; i < nc; i++ {
 		go producer()
 	}
+
 	var consumersEnded int
 	for consumersEnded != nc {
 		<-finished
@@ -179,6 +180,5 @@ func main() {
 	}
 
 	duration := time.Since(start)
-	fmt.Printf("Average Time Elapsed: %v seconds. For Np:%v, Nc:%v and N:%v \n", duration.Seconds(), np, nc, n)
-	fmt.Print("=====================\n")
+	fmt.Printf("%v", duration.Seconds())
 }
