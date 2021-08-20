@@ -49,11 +49,11 @@ func main() {
 		fmt.Print("Incorrect flags values passed \n")
 		return
 	}
-	//var compAcc = 0
+	var compAcc = 0
 	vector := make([]int8, n)
 	for i := 0; i < n; i++ {
 		x := generateRandomNumber()
-		//compAcc += int(x)
+		compAcc += int(x)
 		vector[i] = x
 	}
 	var avgTime float64

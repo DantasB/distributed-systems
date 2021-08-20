@@ -16,7 +16,6 @@ func Aquire() {
 }
 
 //Release the lock setting the variable to 0
-//Uses atomic write, because it's recommended by the library
 func Release() {
-	atomic.StoreUint32(&lock, 0)
+	lock = 0
 }
