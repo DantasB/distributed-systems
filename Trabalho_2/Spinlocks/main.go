@@ -59,13 +59,7 @@ func main() {
 			go sumThread(vector[i:(i + n/k)])
 		}
 		go sumThread(vector[i:])
-		for {
-			syncprim.Aquire()
-			shouldEnd := (thEnded == k)
-			syncprim.Release()
-			if shouldEnd {
-				break
-			}
+		for thEnded != k {
 		}
 		thEnded = 0
 		duration := time.Since(start)
