@@ -31,6 +31,7 @@ func sumThread(vec []int8) {
 	acc += temp
 	thEnded++
 	syncprim.Release()
+
 }
 
 func main() {
@@ -43,11 +44,11 @@ func main() {
 		fmt.Print("Incorrect flags values passed \n")
 		return
 	}
-	var compAcc = 0
+	//var compAcc = 0
 	vector := make([]int8, n)
 	for i := 0; i < n; i++ {
 		x := generateRandomNumber()
-		compAcc += int(x)
+		//compAcc += int(x)
 		vector[i] = x
 	}
 	var avgTime float64
@@ -55,15 +56,16 @@ func main() {
 		start := time.Now()
 		i := 0
 		for ; i < (n-n%k)-(n/k); i += (n / k) {
-			//fmt.Print(i, "=====", (i + n/k), "\n")
-			//fmt.Print(i, " ,")
 			go sumThread(vector[i:(i + n/k)])
-			//fmt.Print(i, "===", i+n/k, "\n")
 		}
-		//fmt.Print(counter, "========", i, "=====", n+1, "\n")
 		go sumThread(vector[i:])
-		for thEnded != k {
-			//fmt.Print(thEnded, "t=== k", k, "\n")
+		for {
+			syncprim.Aquire()
+			shouldEnd := (thEnded == k)
+			syncprim.Release()
+			if shouldEnd {
+				break
+			}
 		}
 		thEnded = 0
 		duration := time.Since(start)
@@ -71,6 +73,4 @@ func main() {
 	}
 	fmt.Printf("Average Time Elapsed: %v seconds. For N:%v and k:%v \n", avgTime/10, n, k)
 	fmt.Print("=====================\n")
-	//fmt.Print(vector, "\n")
-	//fmt.Print(10/3, "\n")
 }
