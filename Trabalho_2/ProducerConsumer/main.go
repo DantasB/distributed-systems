@@ -95,7 +95,8 @@ func getFirstFullPosition() int {
 // fills this index position with 0
 func consumes() {
 	var value = getFirstFullPosition()
-	fmt.Printf("Is Value %d Prime? %s\n", memory[value], isPrime(memory[value]))
+	var memoryValue = memory[value]
+	fmt.Printf("Is Value %d Prime? %s\n", memoryValue, isPrime(memoryValue))
 	memory[value] = 0
 }
 
