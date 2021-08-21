@@ -1,6 +1,6 @@
 # Producer Consumer
 
-![demonstration]()
+![demonstration](https://cdn.discordapp.com/attachments/878687554470289438/878687626390024262/teste_ratton-2021-08-21_14.02.23.gif)
 
 ## Table of Contents
 
@@ -42,7 +42,7 @@ $ ./runner.sh
 # A folder containing informations about all runs for each parameter;
 # A csv containing all data used to generate the graph;
 ```
-![demonstration]()
+![demonstration](https://cdn.discordapp.com/attachments/878687554470289438/878687564129787914/unknown.png)
 
 
 ## Technologies
