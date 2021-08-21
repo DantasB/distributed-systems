@@ -14,6 +14,7 @@ var thEnded = 0
 //seed of random number
 var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
 
+//Generate random number between -100 and 100
 func generateRandomNumber() int8 {
 	x := int8(seed.Intn(101))
 	if seed.Float64() < 0.5 {
@@ -22,6 +23,9 @@ func generateRandomNumber() int8 {
 	return x
 }
 
+//Function that will be executed by created threads
+//Sums a vector and stores on global variable acc
+//Use the lock provides by the created library
 func sumThread(vec []int8) {
 	var temp int
 	for _, v := range vec {
@@ -31,9 +35,11 @@ func sumThread(vec []int8) {
 	acc += temp
 	thEnded++
 	syncprim.Release()
+
 }
 
 func main() {
+	//Define and parses the command line flags
 	var n int
 	var k int
 	flag.IntVar(&n, "n", 0, "Size of array N")
@@ -51,14 +57,20 @@ func main() {
 		vector[i] = x
 	}
 	var avgTime float64
+	//Run 10 times the concurrent adding of the array to get the average time
 	for j := 0; j < 10; j++ {
 		start := time.Now()
 		i := 0
+		//Divides on equal parts the vector and calls the thread to sum it
 		for ; i < (n-n%k)-(n/k); i += (n / k) {
 			go sumThread(vector[i:(i + n/k)])
 		}
+		//Thread to sum the rest of the vector
 		go sumThread(vector[i:])
+
+		//Runs until all threads have ended
 		for thEnded != k {
+
 		}
 		thEnded = 0
 		duration := time.Since(start)
