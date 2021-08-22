@@ -40,8 +40,6 @@ $ ./script.sh
 # The code will start and them you will generate 
 # an output file containing informations about the run
 ```
-![demonstration]()
-
 
 ## Technologies
 
