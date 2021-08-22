@@ -1,6 +1,6 @@
 # Spinlocks
 
-![demonstration]()
+![demonstration](https://cdn.discordapp.com/attachments/469281751592599562/879082386913128468/teste-2-2021-08-22_16.16.56.gif)
 
 ## Table of Contents
 
