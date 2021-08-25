@@ -21,6 +21,10 @@ var memory []int
 var seed = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 //semaphores
+//A weighted semaphore works exactly equals a common semaphore
+//The main difference is that you can acquire more than one resource
+//according the parameter passed. If the parameter is equals one
+//it acquires just one resource per call.
 var empty *semaphore.Weighted
 var full *semaphore.Weighted
 var mutex *semaphore.Weighted
