@@ -14,8 +14,8 @@ func InitQueue(pi ProcessInfo) *ProcessQueue {
 }
 
 type ProcessInfo struct {
-	process uint32
-	conn    net.Conn
+	Process uint32
+	Conn    net.Conn
 }
 
 type ProcessQueue struct {
@@ -24,7 +24,7 @@ type ProcessQueue struct {
 	isEmpty sync.Cond
 }
 
-func (pq *ProcessQueue) push(e ProcessInfo) {
+func (pq *ProcessQueue) Push(e ProcessInfo) {
 	pq.mu.Lock()
 	q := append(*pq.queue, e)
 	pq.queue = &q
@@ -32,7 +32,7 @@ func (pq *ProcessQueue) push(e ProcessInfo) {
 	pq.mu.Unlock()
 }
 
-func (pq *ProcessQueue) pop() ProcessInfo {
+func (pq *ProcessQueue) Pop() ProcessInfo {
 	pq.mu.Lock()
 	for len(*pq.queue) == 0 {
 		pq.isEmpty.Wait()
@@ -44,7 +44,7 @@ func (pq *ProcessQueue) pop() ProcessInfo {
 	return pi
 }
 
-func (pq *ProcessQueue) print() string {
+func (pq *ProcessQueue) Print() string {
 	var s string
 	pq.mu.Lock()
 	s = fmt.Sprintf("%v", (*pq.queue))
