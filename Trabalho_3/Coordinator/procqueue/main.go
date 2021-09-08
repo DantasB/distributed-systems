@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-func InitQueue(pi ProcessInfo) *ProcessQueue {
+func InitQueue() *ProcessQueue {
 	q := []ProcessInfo{}
 	pq := ProcessQueue{queue: &q}
 	pq.isEmpty = *sync.NewCond(&pq.mu)
