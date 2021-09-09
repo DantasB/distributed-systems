@@ -1,8 +1,6 @@
-module Trabalho_3/Coordinator
+module Trabalho_3/Process
 
 go 1.16
-
-replace utils => ../utils
 
 replace Trabalho_3/Utils => ../Utils
 
