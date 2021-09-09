@@ -5,10 +5,10 @@ import (
 	"encoding/binary"
 	"log"
 
-	"../utils"
+	utils "Trabalho_3/Utils"
 )
 
-func handler(pq *procqueue.ProcessQueue) {
+func handler(pq *procqueue.ProcessQueue, logger *log.Logger) {
 	var message uint32
 	for {
 		pi := pq.Pop()
@@ -18,14 +18,14 @@ func handler(pq *procqueue.ProcessQueue) {
 			pi.Conn.Close()
 			continue
 		}
-		log.Print(utils.GenMessage(utils.Grant_message, pi.Process))
-		err = binary.Read(pi.Conn, binary.BigEndian, message)
+		logger.Print(utils.GenMessage(utils.Grant_message, pi.Process))
+		err = binary.Read(pi.Conn, binary.BigEndian, &message)
 		if err != nil {
-			log.Print("[Error] Error reading Socket\n")
+			log.Print("[Error] Error reading Socket\n", err)
 			pi.Conn.Close()
 			continue
 		}
-		log.Print(utils.GenMessage(message, pi.Process))
+		logger.Print(utils.GenMessage(message, pi.Process))
 		if (message & utils.Message_mask) != utils.Release_message {
 			binary.Write(pi.Conn, binary.BigEndian, utils.Error_message)
 		}
