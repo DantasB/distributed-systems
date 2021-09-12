@@ -9,6 +9,7 @@ import (
 func InitQueue() *ProcessQueue {
 	q := []ProcessInfo{}
 	pq := ProcessQueue{queue: &q}
+	pq.processCount = make(map[uint32]int)
 	pq.isEmpty = *sync.NewCond(&pq.mu)
 	return &pq
 }
@@ -19,9 +20,10 @@ type ProcessInfo struct {
 }
 
 type ProcessQueue struct {
-	queue   *[]ProcessInfo
-	mu      sync.Mutex
-	isEmpty sync.Cond
+	queue        *[]ProcessInfo
+	mu           sync.Mutex
+	isEmpty      sync.Cond
+	processCount map[uint32]int
 }
 
 func (pq *ProcessQueue) Push(e ProcessInfo) {
@@ -40,8 +42,17 @@ func (pq *ProcessQueue) Pop() ProcessInfo {
 	pi := (*pq.queue)[0]
 	q := (*pq.queue)[1:]
 	pq.queue = &q
+	pq.processCount[pi.Process] += 1
 	pq.mu.Unlock()
 	return pi
+}
+
+func (pq *ProcessQueue) Count(processNumber uint32) int {
+	var result int
+	pq.mu.Lock()
+	result = pq.processCount[processNumber]
+	pq.mu.Unlock()
+	return result
 }
 
 func (pq *ProcessQueue) Print() string {
