@@ -34,6 +34,7 @@ func main() {
 		if err != nil {
 			log.Fatalln("Couldn't connect to server")
 		}
+
 		binary.Write(conn, binary.BigEndian, utils.Request_message|process_number)
 		err = binary.Read(conn, binary.BigEndian, &message)
 		if err != nil {
@@ -48,10 +49,14 @@ func main() {
 		} else {
 			log.Print("[Error] Message was incorrect and not granted\n")
 		}
+
 		conn.Close()
 	}
 }
 
+// writeFile receives a string and returns an error.
+// It will open a txt file and insert the text message on it.
+// It returns the error if it ocurrs.
 func writeFile(text string) error {
 	//Logger needs the RDWR permission but it will just append
 	file, err := os.OpenFile("resultado.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
