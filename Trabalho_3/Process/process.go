@@ -30,11 +30,10 @@ func main() {
 	var process_number uint32 = uint32(process_number64)
 
 	for i := uint32(0); i < r; i++ {
-		conn, err := net.Dial("tcp", "localhost:6000")
+		conn, err := net.Dial("tcp", "localhost:5000")
 		if err != nil {
 			log.Fatalln("Couldn't connect to server")
 		}
-
 		binary.Write(conn, binary.BigEndian, utils.Request_message|process_number)
 		err = binary.Read(conn, binary.BigEndian, &message)
 		if err != nil {
@@ -43,7 +42,7 @@ func main() {
 		}
 
 		if (message & utils.Message_mask) == utils.Grant_message {
-			writeFile(process_number)
+			writeFile(fmt.Sprintf("Process number: %v\n", process_number))
 			time.Sleep(time.Duration(k) * time.Second)
 			binary.Write(conn, binary.BigEndian, utils.Release_message|process_number)
 		} else {
@@ -53,7 +52,7 @@ func main() {
 	}
 }
 
-func writeFile(process_number uint32) error {
+func writeFile(text string) error {
 	//Logger needs the RDWR permission but it will just append
 	file, err := os.OpenFile("resultado.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {
@@ -63,6 +62,6 @@ func writeFile(process_number uint32) error {
 
 	log.SetOutput(file)
 	log.SetFlags(log.Ldate | log.Lmicroseconds)
-	log.Printf("Process number: %v\n", process_number)
+	log.Printf(text)
 	return file.Close()
 }
