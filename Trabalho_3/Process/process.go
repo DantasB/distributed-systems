@@ -31,7 +31,7 @@ func main() {
 	var process_number uint32 = uint32(process_number64)
 
 	for i := uint32(0); i < r; i++ {
-		//CoConnect to the coordinator by tcp connection
+		//Connect to the coordinator by tcp connection
 		conn, err := net.Dial("tcp", "localhost:5000")
 		if err != nil {
 			log.Fatalln("Couldn't connect to server")
