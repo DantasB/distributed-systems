@@ -11,7 +11,7 @@ import (
 
 func receiver(pq *procqueue.ProcessQueue, abort chan<- struct{}, logger *log.Logger) {
 	var message uint32
-	listener, err := net.Listen("tcp", "localhost:6000")
+	listener, err := net.Listen("tcp", "localhost:5000")
 	if err != nil {
 		logger.Print("[Error] Error listening to socket\n")
 		abort <- struct{}{}
