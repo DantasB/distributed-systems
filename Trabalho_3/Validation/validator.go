@@ -178,6 +178,7 @@ func IsValidCoordinatorLogs() bool {
 
 func main() {
 	var r, n int
+	//Define and parse command line flags
 	flag.IntVar(&r, "r", 0, "Number of threads")
 	flag.IntVar(&n, "n", 0, "Number of processes")
 	flag.Parse()

@@ -75,15 +75,19 @@ func terminal(pq *procqueue.ProcessQueue, abort chan struct{}) {
 
 func main() {
 	fmt.Println("Starting Coordinator. Waiting for messages...\n")
-
+	//Config and initializes the log
 	f, err := os.OpenFile("log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {
 		fmt.Println("Couldn't open file")
 		os.Exit(1)
 	}
 	logger := log.New(f, "", log.Ldate|log.Lmicroseconds)
+
 	abort := make(chan struct{})
+	//Initializes the thread-safe process queue
 	pq := procqueue.InitQueue()
+
+	//Start the necessary go routines
 	go receiver(pq, abort, logger)
 	go handler(pq, logger)
 	terminal(pq, abort)
