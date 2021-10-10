@@ -20,7 +20,7 @@ func main() {
 	flag.Uint64Var(&r64, "r", 0, "Number of threads")
 	flag.IntVar(&k, "k", 0, "Sleep seconds")
 	flag.Parse()
-	if process_number64 < 1 || r64 < 1 || k < 1 {
+	if process_number64 < 1 || r64 < 1 || k < 0 {
 		fmt.Print("Incorrect flags values passed \n")
 		return
 	}
