@@ -66,7 +66,7 @@ func terminal(pq *procqueue.ProcessQueue, abort chan struct{}) {
 					fmt.Printf("[TERMINAL] Couldn't recognize this instruction. Try to use the following options:\n")
 					fmt.Printf("           Kill. Kills the process.\n")
 					fmt.Printf("           Queue. Returns the actual queue.\n")
-					fmt.Printf("           Amount, process_number. Returns the amount of this process number\n")
+					fmt.Printf("           Amount, process_number. Returns the amount of grants to this process number\n")
 				}
 			}
 		}
