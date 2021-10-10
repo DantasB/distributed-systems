@@ -11,6 +11,9 @@ import (
 	"strings"
 )
 
+// amountParsing receives a string and returns a tuple with an uint32 and an error.
+// It will parse a input string and get the process id if the function is named amount.
+// It returns the pid as uint32 and the error message if it exists.
 func amountParsing(input string) (uint32, error) {
 	inputs := strings.Split(strings.Trim(input, " "), ",")
 	if len(inputs) != 2 {
@@ -30,6 +33,11 @@ func amountParsing(input string) (uint32, error) {
 	return uint32(pid), nil
 }
 
+// terminal receives a ProcessQueue and a channel, it returns nothing.
+// It will parse the os.Stding input and initializes the terminal mode.
+// The therminal mode receives a input and prints the informations about the coordinator.
+// Also the terminal will print the informations about the process.
+// It returns nothing.
 func terminal(pq *procqueue.ProcessQueue, abort chan struct{}) {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Printf("[TERMINAL] Write one of the three modes:\n")
