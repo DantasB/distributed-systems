@@ -34,7 +34,8 @@ func main() {
 		//Connect to the coordinator by tcp connection
 		conn, err := net.Dial("tcp", "localhost:5000")
 		if err != nil {
-			log.Fatalln("Couldn't connect to server")
+			fmt.Println("Couldn't connect to server")
+			os.Exit(0)
 		}
 
 		//Send Request mesage
@@ -42,7 +43,7 @@ func main() {
 		//Wait and read message from server
 		err = binary.Read(conn, binary.BigEndian, &message)
 		if err != nil {
-			log.Print("[Error] Error reading Socket\n", err)
+			fmt.Print("[Error] Error reading Socket\n", err)
 			conn.Close()
 		}
 		//Checks if message was Grant as expected
@@ -53,7 +54,7 @@ func main() {
 			//Send Release Message
 			binary.Write(conn, binary.BigEndian, utils.Release_message|process_number)
 		} else {
-			log.Print("[Error] Message was incorrect and not granted\n")
+			fmt.Print("[Error] Message was incorrect and not granted\n")
 		}
 
 		conn.Close()

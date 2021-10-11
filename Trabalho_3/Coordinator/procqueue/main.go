@@ -3,6 +3,7 @@ package procqueue
 import (
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 )
 
@@ -80,9 +81,14 @@ func (pq *ProcessQueue) Count(processNumber uint32) int {
 // unlock the lock
 // returns the string
 func (pq *ProcessQueue) Print() string {
-	var s string
+	//var s string
+	var b strings.Builder
 	pq.mu.Lock()
-	s = fmt.Sprintf("%v", (*pq.queue))
+	b.Grow(len(*pq.queue))
+	fmt.Fprintln(&b, "")
+	for i, val := range *pq.queue {
+		fmt.Fprintf(&b, "Position :%v , Process Number: %v \n", i+1, val.Process)
+	}
 	pq.mu.Unlock()
-	return s
+	return b.String()
 }

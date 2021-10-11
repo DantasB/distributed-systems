@@ -53,12 +53,13 @@ func terminal(pq *procqueue.ProcessQueue, abort chan struct{}) {
 			fmt.Println("\nSome unexpected error occurred")
 			return
 		default:
+			fmt.Printf("> ")
 			n, _ := reader.ReadString('\n')
 			input := strings.ToLower(strings.Trim(n, "\n"))
 			if strings.Trim(input, " ") == "kill" {
-				os.Exit(1)
+				os.Exit(0)
 			} else if strings.Trim(input, " ") == "queue" {
-				fmt.Printf("[TERMINAL] This is the actual Queue: %v\n", pq.Print())
+				fmt.Printf("[TERMINAL] This is the actual Queue: %v", pq.Print())
 			} else {
 				process_number, error := amountParsing(input)
 				if error == nil {
