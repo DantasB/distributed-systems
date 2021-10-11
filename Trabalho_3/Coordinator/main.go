@@ -40,11 +40,13 @@ func amountParsing(input string) (uint32, error) {
 // It returns nothing.
 func terminal(pq *procqueue.ProcessQueue, abort chan struct{}) {
 	reader := bufio.NewReader(os.Stdin)
+	printHelpMessage := func() {
+		fmt.Printf("           Kill. Kills the process.\n")
+		fmt.Printf("           Queue. Returns the actual queue.\n")
+		fmt.Printf("           Amount, process_number. Returns the amount of grants to this process number\n")
+	}
 	fmt.Printf("[TERMINAL] Write one of the three modes:\n")
-	fmt.Printf("           Kill. Kills the process.\n")
-	fmt.Printf("           Queue. Returns the actual queue.\n")
-	fmt.Printf("           Amount, process_number. Returns the amount of this process number\n")
-
+	printHelpMessage()
 	for {
 		select {
 		case <-abort:
@@ -64,9 +66,7 @@ func terminal(pq *procqueue.ProcessQueue, abort chan struct{}) {
 				} else {
 					fmt.Printf("%v", error)
 					fmt.Printf("[TERMINAL] Couldn't recognize this instruction. Try to use the following options:\n")
-					fmt.Printf("           Kill. Kills the process.\n")
-					fmt.Printf("           Queue. Returns the actual queue.\n")
-					fmt.Printf("           Amount, process_number. Returns the amount of grants to this process number\n")
+					printHelpMessage()
 				}
 			}
 		}
