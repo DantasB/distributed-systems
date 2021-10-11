@@ -14,7 +14,7 @@
 
 ## About
 
-This repository is a study about Distributed Systems, where i and my classmate were developing a project for an UFRJ class. The idea of this class assignment was to study about IPC (Inter-process communication) where we developt it using golang.
+This repository is a study about Distributed Systems, where i and my classmate were developing a project for an UFRJ class. The idea of this class assignment was to study about centralized algorithm for mutual exclusion where we developt it using golang.
 
 ## Requirements
 
