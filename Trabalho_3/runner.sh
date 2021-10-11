@@ -1,8 +1,8 @@
 
 COORDINATOR_PATH=Coordinator/
-PROCESS_PATH=Process
-
-cd $PROCESS_PATH/
+PROCESS_PATH=Process/
+VALIDATION_PATH=Validation/
+cd $PROCESS_PATH
  > resultado.txt
 
 NUMBER_OF_PROCESSES=$1
@@ -13,7 +13,7 @@ do
     go run process.go -pn=$PROCESS_NUMBER -r=$R -k=$K &
 done
 
-cd ../Validation/
+wait
 
-sleep $(($K*$R*2))
+cd ../$VALIDATION_PATH
 go run validator.go -r=$R -n=$NUMBER_OF_PROCESSES
