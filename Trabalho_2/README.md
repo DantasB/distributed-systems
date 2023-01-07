@@ -17,11 +17,11 @@ This repository is a study about Distributed Systems, where i and my classmate w
 
 ## Implementations
 
-### [Producer Consumer](https://github.com/DantasB/Distributed-Systems/tree/main/Trabalho_2/ProducerConsumer)
+### [Producer Consumer](https://github.com/DantasB/distributed-systems/tree/main/Trabalho_2/ProducerConsumer)
 
 In this implementation we've learned about semaphores in golang and how to use it to implement a Producer Consumer program.
 
-### [Spinlocks](https://github.com/DantasB/Distributed-Systems/tree/main/Trabalho_2/Spinlocks)
+### [Spinlocks](https://github.com/DantasB/distributed-systems/tree/main/Trabalho_2/Spinlocks)
 
 In this implementation we've learned about spinlocks in golang and how to implement it.
 

@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	utils "github.com/DantasB/Distributed-Systems/Utils"
+	utils "github.com/DantasB/distributed-systems/Utils"
 )
 
 func SocketClient() {

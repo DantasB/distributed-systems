@@ -26,10 +26,10 @@ To run this repository by yourself you will need to install golang in your machi
 
 ```bash
 # Clone this repository
-$ git clone <https://github.com/DantasB/Distributed-Systems>
+$ git clone <https://github.com/DantasB/distributed-systems>
 
 # Access the project page on your terminal
-$ cd Distributed-Systems/Trabalho_2/ProducerConsumer/results/
+$ cd distributed-systems/Trabalho_2/ProducerConsumer/results/
 
 # Set the bash script permission to executable
 $ chmod +x runner

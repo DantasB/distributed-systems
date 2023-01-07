@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	pipe "github.com/DantasB/Distributed-Systems/Pipes"
-	signals "github.com/DantasB/Distributed-Systems/Signals"
-	sockets "github.com/DantasB/Distributed-Systems/Sockets"
+	pipe "github.com/DantasB/distributed-systems/Pipes"
+	signals "github.com/DantasB/distributed-systems/Signals"
+	sockets "github.com/DantasB/distributed-systems/Sockets"
 )
 
 func main() {

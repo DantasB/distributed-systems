@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"syscall"
 
-	utils "github.com/DantasB/Distributed-Systems/Utils"
+	utils "github.com/DantasB/distributed-systems/Utils"
 )
 
 // Consumer receives a io.Reader and has no return.

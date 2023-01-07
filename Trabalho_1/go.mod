@@ -1,3 +1,3 @@
-module github.com/DantasB/Distributed-Systems
+module github.com/DantasB/distributed-systems
 
 go 1.16
